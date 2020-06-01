@@ -1,9 +1,12 @@
 
-# import my libraries
-import sys
-sys.path.append("../..")
-from util import log
-
+# logging setup
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)s:   %(asctime)s\n%(message)s')
+file_handler = logging.FileHandler('logs/features.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # import libraries
 import pandas as pd
@@ -65,7 +68,7 @@ def summary(path, assignment):
     
     n, m = df.shape[0], df.shape[1]
     
-    log("n = {0}, m = {1}".format(n, m), __name__, "info")
+    logger.info("n = {0}, m = {1}".format(n, m))
     
     names = df.columns
     nulls = count_nulls(df)
@@ -76,7 +79,7 @@ def summary(path, assignment):
     frame = {"Column Name": names, "Null Count": nulls, "Data Assign": assign,
              "Data Type": dtypes, "Summary Stats": statistics}
     
-    log(tabulate(pd.DataFrame(frame), headers="keys", tablefmt="psql"), __name__, "info")
+    logger.info(tabulate(pd.DataFrame(frame), headers="keys", tablefmt="psql"))
 
 
 

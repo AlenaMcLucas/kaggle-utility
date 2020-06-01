@@ -1,24 +1,28 @@
 
 # This file holds all of the constant values to configure the project setup
 
-# FIT_TYPE_REGRESSION = "reg"
-# FIT_TYPE_BINARY_CLASSIFICATION = "bclass"
-# FIT_TYPE_CLASSIFICATION = "class"
+# remove some logs if they exist
+import os
+for p in ["logs/features.log", "logs/train.log"]:
+    if os.path.exists(p):
+        os.remove(p)
 
-# EVAL_R2 = "r2"
-# EVAL_LOGLOSS = "logloss"
-# EVAL_AUC = "auc"
-
-# ------------------------
+# logging setup
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)s:   %(asctime)s\n%(message)s')
+file_handler = logging.FileHandler('logs/pipeline.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # import my libraries
 import sys
 sys.path.append("../..")
-from util import log
 from train_test_validate import train_val_test_split
+from assign import Assign
 import feature_check as fc
 import feature_clean as fclean
-from assign import Assign
 from train import train, train_bayesian_opt
 
 
@@ -26,14 +30,13 @@ from train import train, train_bayesian_opt
 FIT_TYPE = "binaryclass"   # "regression", "multiclass"
 EVAL = "logloss"   #  "accuracy", "r2", "auc"
 PATH = "data/heart.csv"
-TARGET = "target"
-
 X_TRAIN_PATH = "data/X_train.csv"
+TARGET = "target"
 
 
 
 # pipeline start
-log("\n\n\nPipeline start", __name__, "info")
+logger.info("\n\n\nPipeline start")
 
 
 
@@ -64,11 +67,6 @@ x_train_assign.remap()
 x_train_assign.log()
 fc.summary(X_TRAIN_PATH, x_train_assign)
 
-
-# instantiate Assign object to track column assignments
-# x_train_assign = Assign(X_TRAIN_PATH)
-# x_train_assign.log()
-
 # train()
 
 train_bayesian_opt()
@@ -76,7 +74,7 @@ train_bayesian_opt()
 
 
 # pipeline complete
-log("Pipeline complete\n\n\n", __name__, "info")
+logger.info("Pipeline complete\n\n\n")
 
 
 

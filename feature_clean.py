@@ -1,9 +1,12 @@
 
-# import my libraries
-import sys
-sys.path.append("../..")
-from util import log
-
+# logging setup
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)s:   %(asctime)s\n%(message)s')
+file_handler = logging.FileHandler('logs/features.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # import libraries
 import pandas as pd
@@ -76,8 +79,8 @@ def baseline_train_val_test(assign):
     X_v.to_csv("data/X_val.csv", index=False)
     X_te.to_csv("data/X_test.csv", index=False)
     
-    log("Dropped from validation set [column, count]: " + str(v_drop), __name__, "info")
-    log("Dropped from testing set [column, count]: " + str(te_drop), __name__, "info")
+    logger.info("Dropped from validation set [column, count]: " + str(v_drop))
+    logger.info("Dropped from testing set [column, count]: " + str(te_drop))
 
 
 

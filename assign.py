@@ -1,7 +1,12 @@
 
-# import my libraries
-from util import log
-
+# logging setup
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)s:   %(asctime)s\n%(message)s')
+file_handler = logging.FileHandler('logs/features.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # import libraries
 import pandas as pd
@@ -27,6 +32,6 @@ class Assign:
                         item for item in self.col_map]
 
     def log(self):
-        log(self.path + "\n" + str(self.col_map), __name__, "info")
+        logger.info(self.path + "\n" + str(self.col_map))
 
 

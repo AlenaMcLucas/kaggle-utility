@@ -1,6 +1,12 @@
 
-# import my libraries
-from util import log
+# logging setup
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)s:   %(asctime)s\n%(message)s')
+file_handler = logging.FileHandler('logs/train.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # import libraries
 import logging
@@ -10,6 +16,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 from GPyOpt.methods import BayesianOptimization
+
 
 
 def train():
@@ -26,7 +33,7 @@ def train():
 
     y_pred = model.predict(X_val)
 
-    log(str(accuracy_score(y_val.values.ravel(), y_pred)), __name__, "debug")
+    logger.info(str(accuracy_score(y_val.values.ravel(), y_pred)))
 
 
 
@@ -63,6 +70,6 @@ def train_bayesian_opt():
 
     optimizer.run_optimization(max_iter=20)
 
-    log(str(optimizer.Y), __name__, "debug")
-    log(str(optimizer.X), __name__, "debug")
+    logger.info(str(optimizer.Y))
+    logger.info(str(optimizer.X))
 

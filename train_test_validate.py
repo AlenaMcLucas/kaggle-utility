@@ -1,7 +1,12 @@
 
-# import my libraries
-from util import log
-
+# logging setup
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(name)s:   %(asctime)s\n%(message)s')
+file_handler = logging.FileHandler('logs/pipeline.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 # import libraries
 import pandas as pd
@@ -36,8 +41,6 @@ def train_val_test_split(path, target, val, test):
 	y_train.to_csv("data/y_train.csv", index=False)
 	y_val.to_csv("data/y_val.csv", index=False)
 	y_test.to_csv("data/y_test.csv", index=False)
+	
 
-
-	#return [X_train, y_train, X_val, y_val, X_test, y_test]
-
-	log("Train / validate / test split complete", __name__, "info")
+	logger.info("Train / validate / test split complete")
