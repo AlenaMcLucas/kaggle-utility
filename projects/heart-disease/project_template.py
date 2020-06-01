@@ -23,7 +23,11 @@ from train_test_validate import train_val_test_split
 from assign import Assign
 import feature_check as fc
 import feature_clean as fclean
+from scale import scale, scale_test
 from train import train, train_bayesian_opt
+
+# import libraries
+from sklearn.neighbors import KNeighborsClassifier
 
 
 
@@ -43,33 +47,36 @@ logger.info("\n\n\nPipeline start")
 # train / test / val split
 train_val_test_split(PATH, TARGET, 0.2, 0.15)
 
-# instantiate Assign object to track column assignments
-x_train_assign = Assign(X_TRAIN_PATH)
-x_train_assign.log()
+# scaler
+scale_test(KNeighborsClassifier(n_neighbors = 5, weights = 'uniform', algorithm = 'brute', p = 2))
 
-# summarize the data
-fc.summary(X_TRAIN_PATH, x_train_assign)
+# # instantiate Assign object to track column assignments
+# x_train_assign = Assign(X_TRAIN_PATH)
+# x_train_assign.log()
 
-# correct assignment of columns
-map_columns = {'sex': 'cat', 'cp': 'cat', 'fbs': 'cat', 'restecg': 'cat', 'exang': 'cat',
-                'slope': 'cat', 'ca': 'cat', 'thal': 'cat'}
+# # summarize the data
+# fc.summary(X_TRAIN_PATH, x_train_assign)
 
-x_train_assign.remap_force(map_columns)
-x_train_assign.log()
+# # correct assignment of columns
+# map_columns = {'sex': 'cat', 'cp': 'cat', 'fbs': 'cat', 'restecg': 'cat', 'exang': 'cat',
+#                 'slope': 'cat', 'ca': 'cat', 'thal': 'cat'}
 
-# summarize the data
-fc.summary(X_TRAIN_PATH, x_train_assign)
+# x_train_assign.remap_force(map_columns)
+# x_train_assign.log()
 
-# baseline clean data
-fclean.baseline_train_val_test(x_train_assign)
+# # summarize the data
+# fc.summary(X_TRAIN_PATH, x_train_assign)
 
-x_train_assign.remap()
-x_train_assign.log()
-fc.summary(X_TRAIN_PATH, x_train_assign)
+# # baseline clean data
+# fclean.baseline_train_val_test(x_train_assign)
 
-# train()
+# x_train_assign.remap()
+# x_train_assign.log()
+# fc.summary(X_TRAIN_PATH, x_train_assign)
 
-train_bayesian_opt()
+# # train()
+
+# train_bayesian_opt()
 
 
 
