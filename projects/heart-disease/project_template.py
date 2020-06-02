@@ -28,6 +28,7 @@ from train import train, train_bayesian_opt
 
 # import libraries
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn import preprocessing as pp
 
 
 
@@ -47,36 +48,40 @@ logger.info("\n\n\nPipeline start")
 # train / test / val split
 train_val_test_split(PATH, TARGET, 0.2, 0.15)
 
+# instantiate Assign object to track column assignments
+x_train_assign = Assign(X_TRAIN_PATH)
+x_train_assign.log()
+
+# summarize the data
+fc.summary(X_TRAIN_PATH, x_train_assign)
+
+# correct assignment of columns
+map_columns = {'sex': 'cat', 'cp': 'cat', 'fbs': 'cat', 'restecg': 'cat', 'exang': 'cat',
+                'slope': 'cat', 'ca': 'cat', 'thal': 'cat'}
+
+x_train_assign.remap_force(map_columns)
+x_train_assign.log()
+
+# summarize the data
+fc.summary(X_TRAIN_PATH, x_train_assign)
+
+# baseline clean data
+fclean.baseline_train_val_test(x_train_assign)
+
+x_train_assign.remap()
+x_train_assign.log()
+fc.summary(X_TRAIN_PATH, x_train_assign)
+
 # scaler
-scale_test(KNeighborsClassifier(n_neighbors = 5, weights = 'uniform', algorithm = 'brute', p = 2))
+# scale_test(KNeighborsClassifier(n_neighbors = 5, weights = 'uniform', algorithm = 'brute', p = 2), rank = "logloss")
+scale_test(scales = [('StandardScaler', pp.StandardScaler())], save = True)
 
-# # instantiate Assign object to track column assignments
-# x_train_assign = Assign(X_TRAIN_PATH)
-# x_train_assign.log()
-
-# # summarize the data
-# fc.summary(X_TRAIN_PATH, x_train_assign)
-
-# # correct assignment of columns
-# map_columns = {'sex': 'cat', 'cp': 'cat', 'fbs': 'cat', 'restecg': 'cat', 'exang': 'cat',
-#                 'slope': 'cat', 'ca': 'cat', 'thal': 'cat'}
-
-# x_train_assign.remap_force(map_columns)
-# x_train_assign.log()
-
-# # summarize the data
-# fc.summary(X_TRAIN_PATH, x_train_assign)
-
-# # baseline clean data
-# fclean.baseline_train_val_test(x_train_assign)
-
-# x_train_assign.remap()
-# x_train_assign.log()
-# fc.summary(X_TRAIN_PATH, x_train_assign)
+# summarize the data
+fc.summary(X_TRAIN_PATH, x_train_assign)
 
 # # train()
 
-# train_bayesian_opt()
+train_bayesian_opt()
 
 
 
