@@ -79,7 +79,7 @@ scale_test(scales = [('StandardScaler', pp.StandardScaler())], save = True)
 # summarize the data
 fc.summary(X_TRAIN_PATH, x_train_assign)
 
-# # train()
+#train()
 
 train_bayesian_opt()
 
