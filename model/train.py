@@ -10,15 +10,13 @@ logger.addHandler(file_handler)
 
 # import my libraries
 import sys
-sys.path.append("../..")
-from eval_model import evaluate
+sys.path.append("../../..")
+from model.eval_model import evaluate
 
 # import libraries
-import logging
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 from GPyOpt.methods import BayesianOptimization
 
